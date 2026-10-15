@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PdfCraft</title>
+    <link rel="icon" href="../icons/pdfcraft-32.png" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="viewer.css" />
+    <script type="module" src="viewer.js"></script>
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-start">
+        <img class="brand-mark" src="../icons/pdfcraft-64.png" alt="" width="24" height="24" />
+        <span class="brand-name">PdfCraft</span>
+        <span class="divider" aria-hidden="true"></span>
+        <div class="doc-title">
+          <span id="doc-name" class="doc-name" data-i18n="viewerNoDocument"></span>
+          <span id="doc-meta" class="doc-meta"></span>
+        </div>
+      </div>
+      <div class="topbar-end">
+        <span id="unsaved" class="unsaved" hidden data-i18n="viewerUnsaved"></span>
+        <button id="btn-open" class="btn btn-quiet" type="button" data-i18n-title="viewerOpenLocalTip">
+          <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#folder-open" /></svg>
+          <span data-i18n="viewerOpenLocal"></span>
+        </button>
+        <button id="btn-download" class="btn btn-quiet" type="button" disabled data-i18n-title="viewerDownloadTip">
+          <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#download" /></svg>
+          <span data-i18n="viewerDownload"></span>
+        </button>
+        <div class="menu-wrap">
+          <button id="btn-more" class="btn btn-icon" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="viewerMore" data-i18n-aria-label="viewerMore">
+            <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#more" /></svg>
+          </button>
+          <div id="menu-more" class="menu" role="menu" hidden>
+            <button id="menu-native" class="menu-item" role="menuitem" type="button" hidden>
+              <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#external" /></svg>
+              <span data-i18n="viewerOpenNative"></span>
+            </button>
+            <button id="menu-source" class="menu-item" role="menuitem" type="button" hidden>
+              <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#link" /></svg>
+              <span data-i18n="viewerCopyLink"></span>
+            </button>
+            <button id="menu-settings" class="menu-item" role="menuitem" type="button">
+              <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#settings" /></svg>
+              <span data-i18n="viewerSettings"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <input id="file-input" type="file" accept="application/pdf,.pdf" multiple hidden />
+    </header>
+
+    <main class="stage">
+      <iframe id="pdfcraft" title="PdfCraft PDF workbench" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen></iframe>
+
+      <section id="status" class="status" aria-live="polite">
+        <div id="status-card" class="status-card">
+          <img id="landing-icon" class="landing-icon" src="../icons/pdfcraft-128.png" alt="" width="64" height="64" hidden />
+          <div id="status-spinner" class="spinner" aria-hidden="true"></div>
+          <svg id="status-icon" class="status-icon" aria-hidden="true" hidden><use href="../icons/ui.svg#alert" /></svg>
+          <h1 id="status-title" class="status-title" data-i18n="viewerStarting"></h1>
+          <p id="status-detail" class="status-detail"></p>
+          <div class="progress" id="progress" hidden><div class="progress-bar" id="progress-bar"></div></div>
+          <div id="status-actions" class="status-actions" hidden>
+            <button id="btn-retry" class="btn btn-primary" type="button" data-i18n="viewerRetry" hidden></button>
+            <button id="btn-native" class="btn btn-secondary" type="button" data-i18n="viewerOpenNative" hidden></button>
+            <button id="btn-pick" class="btn btn-secondary" type="button" data-i18n="viewerSelectFile" hidden></button>
+            <button id="btn-continue" class="btn btn-secondary" type="button" data-i18n="viewerContinue" hidden></button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="drop-hint" aria-hidden="true"><span data-i18n="viewerDropHint"></span></div>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
