@@ -35,7 +35,7 @@ preselection and theme.
 | # | Scenario | Expected | Actual | Result | Evidence (test) |
 |---|---|---|---|---|---|
 | 1 | Extension loads | Enabled; no manifest errors, install warnings, runtime or console errors across the main flows | As expected | Pass | errors: "main flows leave no extension errors" |
-| 2 | Direct PDF URL | Redirected to `viewer.html?file=<url>`; PdfCraft 0.8.0 starts; document opens. The address bar then shows only `viewer/viewer.html` (the document moves to `history.state`); the top bar and tab title stop naming it ("PdfCraft"); *Download original* names it in its tooltip and the ⋮ menu shows "Original: doc.pdf" | As expected | Pass | viewer #1 |
+| 2 | Direct PDF URL | Redirected to `pdfcraft.html?file=<url>`; PdfCraft 0.8.0 starts; document opens. The address bar then shows only `pdfcraft.html` (the document moves to `history.state`); the top bar and tab title stop naming it ("PdfCraft"); *Download original* names it in its tooltip and the ⋮ menu shows "Original: doc.pdf" | As expected | Pass | viewer #1 |
 | 3 | PDF link, same tab and `target=_blank` | Both open the viewer | As expected | Pass | viewer #2 |
 | 4 | 302 redirect to a PDF | Viewer opens the final URL | As expected | Pass | viewer #3 |
 | 5 | `application/pdf` without `.pdf` in the path | Viewer | As expected | Pass | viewer #4 |
@@ -66,13 +66,13 @@ preselection and theme.
 | 30 | Local `file://` PDF, file access allowed | Redirected; "Local report.pdf · Local file" | As expected | Pass | ui #10 |
 | 31 | "Copy link to original" | Toast "Link copied"; the exact original URL (with query and fragment) written to the clipboard | As expected | Pass | viewer "Copy document link" |
 | 32 | Bypassed load becomes a download | The one-time allow rule is removed; the next PDF in that tab opens in PdfCraft again | As expected | Pass | viewer "a bypassed load that becomes a download…" |
-| 33 | Reload a viewer tab | The same document reopens; the address stays `viewer/viewer.html` | As expected | Pass | viewer "reloading the viewer reopens…" |
+| 33 | Reload a viewer tab | The same document reopens; the address stays `pdfcraft.html` | As expected | Pass | viewer "reloading the viewer reopens…" |
 
 **Google Chrome 155.0.8059.79 (the installed, branded Chrome): smoke test passed** (`npm run test:chrome`).
 Run headless in a throwaway profile; the user's own profile was not used. The extension was
 installed with the DevTools command `Extensions.loadUnpacked`, because branded Chrome ignores
 `--load-extension`. Checked and passed:
-- A PDF link redirects to the viewer (`viewer.html?file=…`, then `viewer.html` with the document in `history.state`) and PdfCraft 0.8.0 opens it
+- A PDF link redirects to the viewer (`pdfcraft.html?file=…`, then `pdfcraft.html` with the document in `history.state`) and PdfCraft 0.8.0 opens it
   (`pdfcraft-13-chrome155-viewer.png`).
 - `chrome.action.openPopup()` renders the popup at 293 × 487 with "10 PDFs on this page"
   (`pdfcraft-14-chrome155-popup.png`).
