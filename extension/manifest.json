@@ -50,7 +50,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["viewer/viewer.html", "icons/pdfcraft-64.png"],
+      "resources": ["pdfcraft.html", "icons/pdfcraft-64.png"],
       "matches": ["<all_urls>"]
     }
   ],
