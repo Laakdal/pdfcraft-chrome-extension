@@ -1,0 +1,335 @@
+{
+  "extName": {
+    "message": "PdfCraft: PDF viewer and editor"
+  },
+  "extDescription": {
+    "message": "Open, edit, organize, sign and save PDFs in Chrome with PdfCraft. Works offline; your files stay on your computer."
+  },
+  "actionTitle": {
+    "message": "PdfCraft"
+  },
+  "menuOpenLink": {
+    "message": "Open link in PdfCraft"
+  },
+  "menuOpenFrame": {
+    "message": "Open this frame in PdfCraft"
+  },
+  "menuOpenPage": {
+    "message": "Open this PDF in PdfCraft"
+  },
+  "viewerNoDocument": {
+    "message": "No document"
+  },
+  "viewerOpenLocal": {
+    "message": "Open file"
+  },
+  "viewerOpenLocalTip": {
+    "message": "Open a PDF from your computer"
+  },
+  "viewerDownload": {
+    "message": "Download"
+  },
+  "viewerDownloadTip": {
+    "message": "Download the original file"
+  },
+  "viewerMore": {
+    "message": "More options"
+  },
+  "viewerOpenNative": {
+    "message": "Open in Chrome's PDF viewer"
+  },
+  "viewerCopyLink": {
+    "message": "Copy document link"
+  },
+  "viewerSettings": {
+    "message": "PdfCraft settings"
+  },
+  "viewerUnsaved": {
+    "message": "Unsaved changes"
+  },
+  "viewerStarting": {
+    "message": "Starting PdfCraft…"
+  },
+  "viewerDownloading": {
+    "message": "Downloading document…"
+  },
+  "viewerRetry": {
+    "message": "Try again"
+  },
+  "viewerLocalFile": {
+    "message": "Local file"
+  },
+  "viewerUnknownType": {
+    "message": "unknown type"
+  },
+  "viewerSaved": {
+    "message": "Saved $1 to your downloads",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerSaveFailed": {
+    "message": "Couldn't save: $1",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerLinkCopied": {
+    "message": "Link copied"
+  },
+  "viewerLocalNotPdf": {
+    "message": "$1 isn't a PDF",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerFramedTitle": {
+    "message": "Open this document in its own tab"
+  },
+  "viewerFramedDetail": {
+    "message": "PdfCraft doesn't run inside other web pages."
+  },
+  "viewerNotPdfTitle": {
+    "message": "This isn't a PDF"
+  },
+  "viewerNotPdfDetail": {
+    "message": "The server sent a file that isn't a PDF (labelled $1). The link may need you to sign in on the website first, or it may not point at a PDF.",
+    "placeholders": {
+      "type": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerFetchTitle": {
+    "message": "Couldn't open the document"
+  },
+  "viewerDeniedDetail": {
+    "message": "The server refused access (HTTP $1). Sign in on the website, then try again.",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerMissingDetail": {
+    "message": "The document isn't there any more (HTTP $1).",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerHttpDetail": {
+    "message": "The server answered with an error (HTTP $1).",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerNetworkDetail": {
+    "message": "The server couldn't be reached."
+  },
+  "viewerOfflineTitle": {
+    "message": "You're offline"
+  },
+  "viewerOfflineDetail": {
+    "message": "Connect to the internet to download this document. PdfCraft itself works offline: you can still open a PDF from your computer."
+  },
+  "viewerFileTitle": {
+    "message": "Couldn't read the local file"
+  },
+  "viewerFileDetail": {
+    "message": "Turn on \"Allow access to file URLs\" for PdfCraft on chrome://extensions, or open the file with the button below."
+  },
+  "viewerStartFailedTitle": {
+    "message": "PdfCraft couldn't start"
+  },
+  "viewerStartFailedDetail": {
+    "message": "$1. PdfCraft needs WebGL 2: check that hardware acceleration is on in Chrome's settings (System).",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerStartTimeout": {
+    "message": "PdfCraft didn't finish loading"
+  },
+  "optionsTitle": {
+    "message": "PdfCraft settings"
+  },
+  "optVersions": {
+    "message": "Extension $1 · PdfCraft $2",
+    "placeholders": {
+      "ext": {
+        "content": "$1"
+      },
+      "app": {
+        "content": "$2"
+      }
+    }
+  },
+  "optSaved": {
+    "message": "Saved"
+  },
+  "optionsOpening": {
+    "message": "Opening PDFs"
+  },
+  "optWebPdfs": {
+    "message": "Open PDFs from the web in PdfCraft"
+  },
+  "optWebPdfsHint": {
+    "message": "When off, Chrome's own viewer shows them. You can still open any PDF from the toolbar button or a link's right-click menu."
+  },
+  "optOctet": {
+    "message": "Also open mislabelled PDFs"
+  },
+  "optOctetHint": {
+    "message": "Some servers send PDFs as generic downloads (application/octet-stream). Open those in PdfCraft when the address ends in .pdf."
+  },
+  "optLocal": {
+    "message": "Open PDFs from your computer in PdfCraft"
+  },
+  "optLocalHint": {
+    "message": "For file:// addresses, such as PDFs dragged into Chrome."
+  },
+  "optFileAccessOff": {
+    "message": "Chrome doesn't let PdfCraft read local files yet. Turn on \"Allow access to file URLs\" on PdfCraft's details page."
+  },
+  "optFileAccessButton": {
+    "message": "Open details page"
+  },
+  "optEmbedded": {
+    "message": "Show \"Open in PdfCraft\" on embedded PDFs"
+  },
+  "optEmbeddedHint": {
+    "message": "A button on PDFs shown inside web pages."
+  },
+  "optionsAbout": {
+    "message": "About"
+  },
+  "optAboutPrivacy": {
+    "message": "PdfCraft runs entirely inside Chrome. Documents are processed on your computer and never uploaded; there is no account and no server."
+  },
+  "optAboutPermissions": {
+    "message": "Access to all sites lets PdfCraft redirect PDF links to its viewer and download the PDF for you, with your cookies for sites you are signed in to. It reads nothing else."
+  },
+  "optAboutLicence": {
+    "message": "PdfCraft is free software under the MIT or Apache-2.0 licence."
+  },
+  "optAboutNotice": {
+    "message": "Third-party notices"
+  },
+  "embeddedOpen": {
+    "message": "Open in PdfCraft"
+  },
+  "embeddedOpenTip": {
+    "message": "Open this PDF in a PdfCraft tab to edit, sign or save it"
+  },
+  "viewerSelectFile": {
+    "message": "Select a file"
+  },
+  "viewerContinue": {
+    "message": "Continue to PdfCraft"
+  },
+  "viewerDropHint": {
+    "message": "Drop PDFs to open them in PdfCraft"
+  },
+  "landingTitle": {
+    "message": "Open a PDF in PdfCraft"
+  },
+  "landing_allTitle": {
+    "message": "Open a PDF in PdfCraft"
+  },
+  "landing_readTitle": {
+    "message": "Choose a PDF to read"
+  },
+  "landing_editTitle": {
+    "message": "Choose a PDF to edit"
+  },
+  "landing_convertTitle": {
+    "message": "Choose a PDF to convert"
+  },
+  "landing_signTitle": {
+    "message": "Choose a PDF to fill and sign"
+  },
+  "landingDetail": {
+    "message": "Select a file or drop it here. It stays on your computer."
+  },
+  "popupSettings": {
+    "message": "PdfCraft settings"
+  },
+  "popupViewOrEdit": {
+    "message": "View or edit files"
+  },
+  "popupSelectFile": {
+    "message": "Select a file"
+  },
+  "popupConvert": {
+    "message": "Convert"
+  },
+  "popupConvertHint": {
+    "message": "Export to Word, images and more"
+  },
+  "popupEdit": {
+    "message": "Edit"
+  },
+  "popupEditHint": {
+    "message": "Edit text and pages"
+  },
+  "popupSign": {
+    "message": "E-Sign"
+  },
+  "popupSignHint": {
+    "message": "Fill in forms and sign"
+  },
+  "popupUseInChrome": {
+    "message": "Open PDFs in PdfCraft"
+  },
+  "popupThisPdf": {
+    "message": "This tab shows a PDF"
+  },
+  "popupOpenThis": {
+    "message": "Open in PdfCraft"
+  },
+  "popupPagePdfs": {
+    "message": "$1 PDFs on this page",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupPagePdfsOne": {
+    "message": "1 PDF on this page"
+  },
+  "popupPagePdfsMore": {
+    "message": "and $1 more",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "embeddedHide": {
+    "message": "Hide on this page"
+  },
+  "popupInPdfCraft": {
+    "message": "This PDF is open in PdfCraft"
+  },
+  "popupInPdfCraftDetail": {
+    "message": "$1 · Convert, Edit and E-Sign below use this document.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  }
+}
