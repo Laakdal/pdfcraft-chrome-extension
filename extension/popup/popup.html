@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PdfCraft</title>
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="popup.css" />
+    <script type="module" src="popup.js"></script>
+  </head>
+  <body>
+    <header class="head">
+      <img class="logo" src="../icons/pdfcraft-64.png" alt="" width="28" height="28" />
+      <span class="title">PdfCraft</span>
+      <button id="btn-settings" class="btn btn-icon" type="button" data-i18n-title="popupSettings" data-i18n-aria-label="popupSettings">
+        <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#settings" /></svg>
+      </button>
+    </header>
+
+    <main>
+      <section class="card card-open">
+        <span class="card-label" data-i18n="popupViewOrEdit"></span>
+        <button id="btn-select" class="pill" type="button">
+          <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#file" /></svg>
+          <span data-i18n="popupSelectFile"></span>
+        </button>
+      </section>
+
+      <!-- Filled in for the active tab: a PDF in this tab, or PDFs linked from this page. -->
+      <section id="context" class="card card-context" hidden aria-live="polite"></section>
+
+      <nav class="rows" aria-label="PdfCraft tools">
+        <button class="row" type="button" data-mode="convert">
+          <svg class="icon row-icon" aria-hidden="true"><use href="../icons/ui.svg#export" /></svg>
+          <span class="row-text"><strong data-i18n="popupConvert"></strong><span data-i18n="popupConvertHint"></span></span>
+          <svg class="icon row-chevron" aria-hidden="true"><use href="../icons/ui.svg#chevron" /></svg>
+        </button>
+        <button class="row" type="button" data-mode="edit">
+          <svg class="icon row-icon" aria-hidden="true"><use href="../icons/ui.svg#edit" /></svg>
+          <span class="row-text"><strong data-i18n="popupEdit"></strong><span data-i18n="popupEditHint"></span></span>
+          <svg class="icon row-chevron" aria-hidden="true"><use href="../icons/ui.svg#chevron" /></svg>
+        </button>
+        <button class="row" type="button" data-mode="sign">
+          <svg class="icon row-icon" aria-hidden="true"><use href="../icons/ui.svg#sign" /></svg>
+          <span class="row-text"><strong data-i18n="popupSign"></strong><span data-i18n="popupSignHint"></span></span>
+          <svg class="icon row-chevron" aria-hidden="true"><use href="../icons/ui.svg#chevron" /></svg>
+        </button>
+      </nav>
+    </main>
+
+    <footer class="foot">
+      <label class="toggle">
+        <span data-i18n="popupUseInChrome"></span>
+        <input id="toggle-web" type="checkbox" class="switch" />
+      </label>
+    </footer>
+  </body>
+</html>
