@@ -4,15 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PdfCraft</title>
-    <link rel="icon" href="../icons/pdfcraft-32.png" />
-    <link rel="stylesheet" href="../ui/tokens.css" />
-    <link rel="stylesheet" href="viewer.css" />
-    <script type="module" src="viewer.js"></script>
+    <link rel="icon" href="icons/pdfcraft-32.png" />
+    <link rel="stylesheet" href="ui/tokens.css" />
+    <link rel="stylesheet" href="viewer/viewer.css" />
+    <script type="module" src="viewer/viewer.js"></script>
   </head>
   <body>
     <header class="topbar" role="banner">
       <div class="topbar-start">
-        <img class="brand-mark" src="../icons/pdfcraft-64.png" alt="" width="24" height="24" />
+        <img class="brand-mark" src="icons/pdfcraft-64.png" alt="" width="24" height="24" />
         <span class="brand-name">PdfCraft</span>
         <span id="doc-divider" class="divider" aria-hidden="true"></span>
         <div id="doc-title" class="doc-title">
@@ -23,29 +23,29 @@
       <div class="topbar-end">
         <span id="unsaved" class="unsaved" hidden data-i18n="viewerUnsaved"></span>
         <button id="btn-open" class="btn btn-quiet" type="button" data-i18n-title="viewerOpenLocalTip">
-          <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#folder-open" /></svg>
+          <svg class="icon" aria-hidden="true"><use href="icons/ui.svg#folder-open" /></svg>
           <span data-i18n="viewerOpenLocal"></span>
         </button>
         <button id="btn-download" class="btn btn-quiet" type="button" disabled data-i18n-title="viewerDownloadTip">
-          <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#download" /></svg>
+          <svg class="icon" aria-hidden="true"><use href="icons/ui.svg#download" /></svg>
           <span data-i18n="viewerDownload"></span>
         </button>
         <div class="menu-wrap">
           <button id="btn-more" class="btn btn-icon" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="viewerMore" data-i18n-aria-label="viewerMore">
-            <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#more" /></svg>
+            <svg class="icon" aria-hidden="true"><use href="icons/ui.svg#more" /></svg>
           </button>
           <div id="menu-more" class="menu" role="menu" hidden>
             <div id="menu-label" class="menu-label" hidden></div>
             <button id="menu-native" class="menu-item" role="menuitem" type="button" hidden>
-              <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#external" /></svg>
+              <svg class="icon" aria-hidden="true"><use href="icons/ui.svg#external" /></svg>
               <span data-i18n="viewerOpenNativeOriginal"></span>
             </button>
             <button id="menu-source" class="menu-item" role="menuitem" type="button" hidden>
-              <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#link" /></svg>
+              <svg class="icon" aria-hidden="true"><use href="icons/ui.svg#link" /></svg>
               <span data-i18n="viewerCopyLinkOriginal"></span>
             </button>
             <button id="menu-settings" class="menu-item" role="menuitem" type="button">
-              <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#settings" /></svg>
+              <svg class="icon" aria-hidden="true"><use href="icons/ui.svg#settings" /></svg>
               <span data-i18n="viewerSettings"></span>
             </button>
           </div>
@@ -59,9 +59,9 @@
 
       <section id="status" class="status" aria-live="polite">
         <div id="status-card" class="status-card">
-          <img id="landing-icon" class="landing-icon" src="../icons/pdfcraft-128.png" alt="" width="64" height="64" hidden />
+          <img id="landing-icon" class="landing-icon" src="icons/pdfcraft-128.png" alt="" width="64" height="64" hidden />
           <div id="status-spinner" class="spinner" aria-hidden="true"></div>
-          <svg id="status-icon" class="status-icon" aria-hidden="true" hidden><use href="../icons/ui.svg#alert" /></svg>
+          <svg id="status-icon" class="status-icon" aria-hidden="true" hidden><use href="icons/ui.svg#alert" /></svg>
           <h1 id="status-title" class="status-title" data-i18n="viewerStarting"></h1>
           <p id="status-detail" class="status-detail"></p>
           <div class="progress" id="progress" hidden><div class="progress-bar" id="progress-bar"></div></div>
