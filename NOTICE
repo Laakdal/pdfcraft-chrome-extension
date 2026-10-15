@@ -1,0 +1,29 @@
+PdfCraft for Chrome
+Copyright (c) 2026 Laakdal and the PdfCraft for Chrome contributors.
+Licensed under the MIT License or the Apache License, Version 2.0, at your option
+(LICENSE-MIT, LICENSE-APACHE).
+
+This extension bundles PdfCraft's official web build, unmodified:
+
+  pdfcraft/pdfcraft-web-<hash>.js and pdfcraft/pdfcraft-web-<hash>_bg.wasm
+  from https://github.com/storytold/pdfcraft/releases/tag/v0.8.0 (pdfcraft-web-0.8.0.zip,
+  SHA-256 1f9ea51f3c1f71cc719c12814e10f236912fa41ef54a7782c7dd4a619d9eee9a)
+  Copyright (c) 2026 ArtCraft Team and the PdfCraft contributors. MIT OR Apache-2.0.
+  Its own notice, which lists the third-party material compiled into it, is pdfcraft/NOTICE,
+  with pdfcraft/LICENSE-MIT and pdfcraft/LICENSE-APACHE.
+
+Licence texts for third-party material named in pdfcraft/NOTICE are in licenses/:
+  - Inter, JetBrains Mono and Dancing Script typefaces: SIL Open Font License 1.1
+    (OFL-Inter.txt, OFL-JetBrainsMono.txt, OFL-DancingScript.txt)
+  - Foxit standard-14 substitute fonts (in hayro): BSD-3-Clause (LICENSE-Foxit-BSD-3-Clause.txt)
+
+Extension assets:
+  - icons/pdfcraft-*.png: the PdfCraft app icon (PdfCraft assets/app-icon/hicolor), original
+    artwork licensed MIT OR Apache-2.0 (icons/LICENSE-pdfcraft-icon.txt).
+  - icons/ui.svg: Lucide icons (https://lucide.dev, as bundled by PdfCraft), ISC License
+    (icons/LICENSE-lucide.txt).
+
+PdfCraft for Chrome is not affiliated with or endorsed by Adobe. "Adobe" and "Acrobat" are
+trademarks of Adobe. The ArtCraft name, wordmark and logos are trademarks of the ArtCraft Team
+and are not used by this extension; they appear only inside the bundled, unmodified PdfCraft
+application, as distributed by its authors.
