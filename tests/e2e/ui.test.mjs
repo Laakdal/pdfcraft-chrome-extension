@@ -18,7 +18,7 @@ after(async () => {
   await env?.close();
 });
 
-const viewer = () => `${env.base}viewer/viewer.html`;
+const viewer = () => `${env.base}pdfcraft.html`;
 
 async function withPopup(page, fn) {
   await page.bringToFront();
