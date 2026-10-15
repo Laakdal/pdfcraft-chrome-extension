@@ -1,0 +1,127 @@
+/* Layout follows Adobe Acrobat's toolbar popup (docs/investigation/05-design-and-comparison.md, A8):
+   293 px wide, header with logo and settings, a "View or edit files" card, a context card, then
+   Convert / Edit / Sign rows. Colours, type and icons are PdfCraft's (ui/tokens.css). */
+
+html, body { width: 293px; background: var(--surface); }
+body { display: flex; flex-direction: column; }
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 48px;
+  padding: 0 var(--space-2) 0 var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.logo { border-radius: 6px; flex: none; }
+.title { flex: 1; font-size: 15px; font-weight: 700; }
+
+main { display: flex; flex-direction: column; gap: 10px; padding: var(--space-3) var(--space-3) var(--space-2); }
+
+.card {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--surface);
+}
+.card[hidden] { display: none; }
+.card-open { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.card-label { font-size: 14px; font-weight: 700; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 var(--space-4) 0 var(--space-3);
+  border: 0;
+  border-radius: 16px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent-text);
+  background: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pill:hover { background: var(--accent-hover); }
+.pill:focus-visible, .row:focus-visible, .ctx-item:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.pill .icon { width: 16px; height: 16px; }
+
+.card-context { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); background: var(--accent-soft); }
+.ctx-title { margin: 0 0 2px; font-size: 14px; font-weight: 700; }
+.ctx-detail { margin: 0 0 var(--space-3); color: var(--text-2); overflow-wrap: anywhere; }
+.ctx-detail-last { margin-bottom: 0; }
+.ctx-actions { display: flex; justify-content: flex-end; }
+.ctx-list { display: flex; flex-direction: column; gap: 2px; margin: 0 calc(-1 * var(--space-2)); padding: 0; list-style: none; }
+.ctx-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 4px var(--space-2);
+  border: 0;
+  border-radius: var(--radius-m);
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.ctx-item:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.ctx-item .icon { color: var(--accent); }
+.ctx-item span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ctx-more { margin: var(--space-1) 0 0; font-size: 12px; color: var(--text-2); }
+
+.rows { display: flex; flex-direction: column; }
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 6px var(--space-2);
+  border: 0;
+  border-radius: var(--radius-m);
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.row:hover { background: var(--surface-hover); }
+.row:active { background: var(--surface-active); }
+.row-icon { width: 20px; height: 20px; color: var(--accent); }
+.row-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.row-text strong { font-size: 14px; }
+.row-text span { color: var(--text-2); font-size: 12px; }
+.row-chevron { color: var(--text-3); }
+
+.foot { padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border); background: var(--surface-2); }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); font-weight: 600; cursor: pointer; }
+
+.switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--surface-active);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  transition: transform 0.15s;
+}
+.switch:checked { background: var(--accent); }
+.switch:checked::after { transform: translateX(16px); }
+.switch:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
