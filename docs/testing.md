@@ -30,12 +30,12 @@ test (puppeteer-core 24.43.1); PdfCraft web build 0.8.0.
 **Unit: 22 of 22 passed.** URL handling, PDF detection, filenames, redirect rules, workspace
 preselection and theme.
 
-**End-to-end: 32 of 32 passed** in about 45 s. Each row was executed; "Evidence" names the test.
+**End-to-end: 33 of 33 passed** in about 55 s. Each row was executed; "Evidence" names the test.
 
 | # | Scenario | Expected | Actual | Result | Evidence (test) |
 |---|---|---|---|---|---|
 | 1 | Extension loads | Enabled; no manifest errors, install warnings, runtime or console errors across the main flows | As expected | Pass | errors: "main flows leave no extension errors" |
-| 2 | Direct PDF URL | Redirected to `viewer.html?file=<url>`; PdfCraft 0.8.0 starts; document opens; title "doc.pdf – PdfCraft" | As expected | Pass | viewer #1 |
+| 2 | Direct PDF URL | Redirected to `viewer.html?file=<url>`; PdfCraft 0.8.0 starts; document opens. The address bar then shows only `viewer/viewer.html` (the document moves to `history.state`); the top bar and tab title stop naming it ("PdfCraft"); *Download original* names it in its tooltip and the ⋮ menu shows "Original: doc.pdf" | As expected | Pass | viewer #1 |
 | 3 | PDF link, same tab and `target=_blank` | Both open the viewer | As expected | Pass | viewer #2 |
 | 4 | 302 redirect to a PDF | Viewer opens the final URL | As expected | Pass | viewer #3 |
 | 5 | `application/pdf` without `.pdf` in the path | Viewer | As expected | Pass | viewer #4 |
@@ -64,14 +64,15 @@ preselection and theme.
 | 28 | Offline | Web PDF: "You're offline" with icon; PdfCraft still starts from the chooser page | As expected | Pass | ui #8 |
 | 29 | Context menus | All three items registered | As expected | Pass | ui #9 (registration only) |
 | 30 | Local `file://` PDF, file access allowed | Redirected; "Local report.pdf · Local file" | As expected | Pass | ui #10 |
-| 31 | "Copy document link" | Toast "Link copied"; the exact original URL (with query and fragment) written to the clipboard | As expected | Pass | viewer "Copy document link" |
+| 31 | "Copy link to original" | Toast "Link copied"; the exact original URL (with query and fragment) written to the clipboard | As expected | Pass | viewer "Copy document link" |
 | 32 | Bypassed load becomes a download | The one-time allow rule is removed; the next PDF in that tab opens in PdfCraft again | As expected | Pass | viewer "a bypassed load that becomes a download…" |
+| 33 | Reload a viewer tab | The same document reopens; the address stays `viewer/viewer.html` | As expected | Pass | viewer "reloading the viewer reopens…" |
 
 **Google Chrome 155.0.8059.79 (the installed, branded Chrome): smoke test passed** (`npm run test:chrome`).
 Run headless in a throwaway profile; the user's own profile was not used. The extension was
 installed with the DevTools command `Extensions.loadUnpacked`, because branded Chrome ignores
 `--load-extension`. Checked and passed:
-- A PDF link redirects to the viewer (`viewer.html?file=…`) and PdfCraft 0.8.0 opens it
+- A PDF link redirects to the viewer (`viewer.html?file=…`, then `viewer.html` with the document in `history.state`) and PdfCraft 0.8.0 opens it
   (`pdfcraft-13-chrome155-viewer.png`).
 - `chrome.action.openPopup()` renders the popup at 293 × 487 with "10 PDFs on this page"
   (`pdfcraft-14-chrome155-popup.png`).
