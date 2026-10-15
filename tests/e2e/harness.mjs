@@ -85,6 +85,15 @@ export async function waitForViewerReady(page, { timeout = 90_000 } = {}) {
 }
 
 /**
+ * The document and workspace a viewer tab was opened with. The viewer moves them from the address
+ * (`?mode=…&file=…`) into history.state, so the address bar shows only the viewer page.
+ */
+export async function viewerSource(page) {
+  await page.waitForFunction(() => history.state?.pdfcraftSource !== undefined);
+  return page.evaluate(() => history.state.pdfcraftSource);
+}
+
+/**
  * Opens the toolbar popup for the active tab and returns a Playwright page for it. Playwright
  * doesn't list extension popups, so this connects a second client over CDP (needs `cdpPort`).
  */
