@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PdfCraft settings</title>
+    <link rel="icon" href="../icons/pdfcraft-32.png" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="options.css" />
+    <script type="module" src="options.js"></script>
+  </head>
+  <body>
+    <header class="page-head">
+      <img src="../icons/pdfcraft-64.png" alt="" width="32" height="32" />
+      <div>
+        <h1 data-i18n="optionsTitle"></h1>
+        <p class="sub" id="versions"></p>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" aria-labelledby="h-open">
+        <h2 id="h-open" data-i18n="optionsOpening"></h2>
+        <label class="row">
+          <span class="text"><strong data-i18n="optWebPdfs"></strong><span data-i18n="optWebPdfsHint"></span></span>
+          <input type="checkbox" class="switch" data-setting="openWebPdfs" />
+        </label>
+        <label class="row">
+          <span class="text"><strong data-i18n="optOctet"></strong><span data-i18n="optOctetHint"></span></span>
+          <input type="checkbox" class="switch" data-setting="openOctetStreamPdfs" />
+        </label>
+        <label class="row">
+          <span class="text"><strong data-i18n="optLocal"></strong><span id="file-access" data-i18n="optLocalHint"></span></span>
+          <input type="checkbox" class="switch" data-setting="openLocalPdfs" />
+        </label>
+        <div class="row row-action" id="file-access-row" hidden>
+          <span class="text"><span data-i18n="optFileAccessOff"></span></span>
+          <button class="btn btn-secondary" type="button" id="btn-file-access" data-i18n="optFileAccessButton"></button>
+        </div>
+        <label class="row">
+          <span class="text"><strong data-i18n="optEmbedded"></strong><span data-i18n="optEmbeddedHint"></span></span>
+          <input type="checkbox" class="switch" data-setting="embeddedButton" />
+        </label>
+      </section>
+
+      <section class="card" aria-labelledby="h-about">
+        <h2 id="h-about" data-i18n="optionsAbout"></h2>
+        <p data-i18n="optAboutPrivacy"></p>
+        <p data-i18n="optAboutPermissions"></p>
+        <p><span data-i18n="optAboutLicence"></span> <a href="../NOTICE" target="_blank" data-i18n="optAboutNotice"></a> · <a href="https://github.com/storytold/pdfcraft" target="_blank" rel="noopener">github.com/storytold/pdfcraft</a></p>
+      </section>
+    </main>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
