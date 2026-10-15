@@ -27,10 +27,26 @@
     "message": "Open a PDF from your computer"
   },
   "viewerDownload": {
-    "message": "Download"
+    "message": "Download original"
   },
   "viewerDownloadTip": {
     "message": "Download the original file"
+  },
+  "viewerDownloadTipNamed": {
+    "message": "Download $1 as it was opened",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerOriginalLabel": {
+    "message": "Original: $1",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "viewerMore": {
     "message": "More options"
@@ -38,8 +54,11 @@
   "viewerOpenNative": {
     "message": "Open in Chrome's PDF viewer"
   },
-  "viewerCopyLink": {
-    "message": "Copy document link"
+  "viewerOpenNativeOriginal": {
+    "message": "Open original in Chrome's PDF viewer"
+  },
+  "viewerCopyLinkOriginal": {
+    "message": "Copy link to original"
   },
   "viewerSettings": {
     "message": "PdfCraft settings"
