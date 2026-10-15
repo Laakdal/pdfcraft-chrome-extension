@@ -63,7 +63,7 @@ download unless you pass `--force`. Other scripts:
 ```
 PDF navigation ─► declarativeNetRequest rule (Content-Type: application/pdf) ─┐
 file:// PDF ────► service worker (webNavigation) ─────────────────────────────┤
-context menu, toolbar popup, embedded-PDF button ─► service worker ───────────┼─► viewer/viewer.html
+context menu, toolbar popup, embedded-PDF button ─► service worker ───────────┼─► pdfcraft.html
                                                                                │   fetches the PDF (your cookies, no CORS),
                                                                                │   checks it, shows errors, saves downloads
                                                                                └─► <iframe> pdfcraft/index.html?host=parent
@@ -76,7 +76,7 @@ context menu, toolbar popup, embedded-PDF button ─► service worker ───
 | `extension/manifest.json` | MV3 manifest |
 | `extension/service-worker.js` | Redirect rules, local files, "open in Chrome's viewer" bypass, context menus, messages |
 | `extension/lib/` | `pdf.js` (URLs, detection, file names), `rules.js` (DNR rules), `settings.js`, `workspace.js` (opening a PdfCraft workspace) |
-| `extension/viewer/` | The PdfCraft tab: top bar, download, errors, file chooser, PdfCraft bridge |
+| `extension/pdfcraft.html`, `extension/viewer/` | The PdfCraft tab (its page, script and styles): top bar, download, errors, file chooser, PdfCraft bridge |
 | `extension/popup/` | Toolbar popup |
 | `extension/options/` | Settings page |
 | `extension/content/embedded-pdf.js` | "Open in PdfCraft" button inside embedded PDF frames |
