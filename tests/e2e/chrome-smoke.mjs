@@ -69,7 +69,7 @@ try {
   result.error = e.message.split('\n')[0];
 } finally {
   console.log(JSON.stringify(result, null, 2));
-  const ok = result.pdfcraftVersion && result.redirectedTo?.includes('/viewer/viewer.html') && result.source === `${fixtures.origin}/doc.pdf` && result.popup?.w === 293 && result.embeddedButton === true;
+  const ok = result.pdfcraftVersion && result.redirectedTo?.includes('/pdfcraft.html') && result.source === `${fixtures.origin}/doc.pdf` && result.popup?.w === 293 && result.embeddedButton === true;
   console.log(ok ? 'PASS' : 'FAIL');
   process.exitCode = ok ? 0 : 1;
   await browser.close();
