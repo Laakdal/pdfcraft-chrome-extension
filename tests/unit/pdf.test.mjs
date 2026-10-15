@@ -19,21 +19,21 @@ const BASE = 'chrome-extension://abcdefghijklmnopabcdefghijklmnop/';
 test('viewerUrl and documentUrlFromViewer round-trip, encoded', () => {
   const doc = 'https://example.com/a b/report.pdf?x=1&y=2#page=3';
   const url = viewerUrl(BASE, doc);
-  assert.equal(url, `${BASE}viewer/viewer.html?file=${encodeURIComponent(doc)}`);
+  assert.equal(url, `${BASE}pdfcraft.html?file=${encodeURIComponent(doc)}`);
   assert.equal(documentUrlFromViewer(url), doc);
 });
 
 test('documentUrlFromViewer keeps an unencoded URL from the redirect rule whole', () => {
   // The declarativeNetRequest \0 substitution appends the URL as it is.
   const doc = 'https://example.com/report.pdf?x=1&file=2#page=3';
-  assert.equal(documentUrlFromViewer(`${BASE}viewer/viewer.html?file=${doc}`), doc);
+  assert.equal(documentUrlFromViewer(`${BASE}pdfcraft.html?file=${doc}`), doc);
 });
 
 test('documentUrlFromViewer rejects missing and unsupported URLs', () => {
-  assert.equal(documentUrlFromViewer(`${BASE}viewer/viewer.html`), null);
-  assert.equal(documentUrlFromViewer(`${BASE}viewer/viewer.html?file=javascript:alert(1)`), null);
-  assert.equal(documentUrlFromViewer(`${BASE}viewer/viewer.html?file=${encodeURIComponent('data:application/pdf,x')}`), null);
-  assert.equal(documentUrlFromViewer(`${BASE}viewer/viewer.html?file=https%3A%E0%A4%A`), null);
+  assert.equal(documentUrlFromViewer(`${BASE}pdfcraft.html`), null);
+  assert.equal(documentUrlFromViewer(`${BASE}pdfcraft.html?file=javascript:alert(1)`), null);
+  assert.equal(documentUrlFromViewer(`${BASE}pdfcraft.html?file=${encodeURIComponent('data:application/pdf,x')}`), null);
+  assert.equal(documentUrlFromViewer(`${BASE}pdfcraft.html?file=https%3A%E0%A4%A`), null);
 });
 
 test('file URLs are openable, other schemes are not', () => {
@@ -85,7 +85,7 @@ test('redirect rules target the viewer and skip attachments', () => {
   const rules = redirectRules(BASE);
   assert.equal(rules.length, 2);
   for (const rule of rules) {
-    assert.equal(rule.action.redirect.regexSubstitution, `${BASE}viewer/viewer.html?file=\\0`);
+    assert.equal(rule.action.redirect.regexSubstitution, `${BASE}pdfcraft.html?file=\\0`);
     assert.deepEqual(rule.condition.resourceTypes, ['main_frame']);
     assert.deepEqual(rule.condition.excludedResponseHeaders, [{ header: 'content-disposition', values: ['attachment*'] }]);
   }
@@ -118,15 +118,15 @@ test('viewer URLs carry an optional workspace before the document', async () => 
   const { modeFromViewer } = await import('../../extension/lib/pdf.js');
   const doc = 'https://x/a.pdf?mode=read&file=1';
   const url = viewerUrl(BASE, doc, { mode: 'edit' });
-  assert.equal(url, `${BASE}viewer/viewer.html?mode=edit&file=${encodeURIComponent(doc)}`);
+  assert.equal(url, `${BASE}pdfcraft.html?mode=edit&file=${encodeURIComponent(doc)}`);
   assert.equal(modeFromViewer(url), 'edit');
   assert.equal(documentUrlFromViewer(url), doc);
   // The document's own mode= parameter (unencoded, after file=) is not the viewer's.
-  assert.equal(modeFromViewer(`${BASE}viewer/viewer.html?file=${doc}`), null);
-  assert.equal(viewerUrl(BASE, null, { mode: 'sign' }), `${BASE}viewer/viewer.html?mode=sign`);
-  assert.equal(modeFromViewer(`${BASE}viewer/viewer.html?mode=sign`), 'sign');
-  assert.equal(viewerUrl(BASE, null, { mode: 'bogus' }), `${BASE}viewer/viewer.html`);
-  assert.equal(modeFromViewer(`${BASE}viewer/viewer.html?mode=bogus`), null);
+  assert.equal(modeFromViewer(`${BASE}pdfcraft.html?file=${doc}`), null);
+  assert.equal(viewerUrl(BASE, null, { mode: 'sign' }), `${BASE}pdfcraft.html?mode=sign`);
+  assert.equal(modeFromViewer(`${BASE}pdfcraft.html?mode=sign`), 'sign');
+  assert.equal(viewerUrl(BASE, null, { mode: 'bogus' }), `${BASE}pdfcraft.html`);
+  assert.equal(modeFromViewer(`${BASE}pdfcraft.html?mode=bogus`), null);
 });
 
 test('redirect rules only apply to GET requests', () => {
