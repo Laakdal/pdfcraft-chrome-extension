@@ -7,7 +7,7 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, test } from 'node:test';
-import { launch, waitForViewerReady } from './harness.mjs';
+import { launch, viewerSource, waitForViewerReady } from './harness.mjs';
 
 let env;
 before(async () => {
@@ -17,7 +17,8 @@ after(async () => {
   await env?.close();
 });
 
-const viewerPrefix = () => `${env.base}viewer/viewer.html?file=`;
+const viewerPage = () => `${env.base}viewer/viewer.html`;
+const viewerPrefix = () => `${viewerPage()}?file=`;
 
 async function open(path) {
   const page = await env.context.newPage();
@@ -64,13 +65,21 @@ async function downloads() {
 
 test('a direct PDF link opens in the PdfCraft viewer', async () => {
   const { page, errors } = await open('/doc.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
-  assert.equal(page.url(), `${viewerPrefix()}${env.fixtures.origin}/doc.pdf`);
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
+  assert.equal((await viewerSource(page)).url, `${env.fixtures.origin}/doc.pdf`);
   await waitForViewerReady(page);
   const s = await statusOf(page);
   assert.equal(s.name, 'doc.pdf');
   assert.match(s.meta, /127\.0\.0\.1:\d+ · 1 KB/);
-  assert.equal(await page.title(), 'doc.pdf – PdfCraft');
+  // PdfCraft can show other documents in its own tabs, so once it runs neither the address bar
+  // nor the top bar names this one.
+  assert.equal(page.url(), viewerPage());
+  assert.equal(await page.title(), 'PdfCraft');
+  assert.ok(await page.isHidden('#doc-title'));
+  assert.equal(await page.getAttribute('#btn-download', 'title'), 'Download doc.pdf as it was opened');
+  await page.click('#btn-more');
+  assert.equal(await page.textContent('#menu-label'), 'Original: doc.pdf');
+  await page.keyboard.press('Escape');
   assert.equal(await page.evaluate(() => document.documentElement.dataset.pdfcraftVersion), '0.8.0');
   assert.deepEqual(errors, []);
   await page.close();
@@ -79,11 +88,11 @@ test('a direct PDF link opens in the PdfCraft viewer', async () => {
 test('clicking a PDF link and a target=_blank link both open the viewer', async () => {
   const { page } = await open('/');
   await page.click('#direct');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await page.goBack().catch(() => {});
   await page.waitForURL(`${env.fixtures.origin}/`);
   const [popup] = await Promise.all([env.context.waitForEvent('page'), page.click('#blank')]);
-  await popup.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await popup.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(popup);
   await popup.close();
   await page.close();
@@ -91,15 +100,29 @@ test('clicking a PDF link and a target=_blank link both open the viewer', async 
 
 test('a redirect to a PDF opens the final URL', async () => {
   const { page } = await open('/redirect.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
-  assert.equal(page.url(), `${viewerPrefix()}${env.fixtures.origin}/doc.pdf`);
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
+  assert.equal((await viewerSource(page)).url, `${env.fixtures.origin}/doc.pdf`);
   await waitForViewerReady(page);
+  await page.close();
+});
+
+test('reloading the viewer reopens the same document from a clean address', async () => {
+  const { page, errors } = await open('/doc.pdf');
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
+  await waitForViewerReady(page);
+  await page.reload();
+  await waitForViewerReady(page);
+  assert.equal(page.url(), viewerPage());
+  assert.equal((await viewerSource(page)).url, `${env.fixtures.origin}/doc.pdf`);
+  assert.equal((await statusOf(page)).name, 'doc.pdf');
+  assert.equal(await page.isDisabled('#btn-download'), false);
+  assert.deepEqual(errors, []);
   await page.close();
 });
 
 test('a PDF without .pdf in its path is recognised by Content-Type', async () => {
   const { page } = await open('/no-extension');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(page);
   assert.equal((await statusOf(page)).name, 'no-extension.pdf');
   await page.close();
@@ -120,7 +143,7 @@ test('a .pdf sent as application/octet-stream downloads by default, like Acrobat
   const page = await env.context.newPage();
   await page.goto(`${env.fixtures.origin}/octet.pdf`).catch(() => {});
   await page.waitForTimeout(2000);
-  assert.ok(!page.url().startsWith(viewerPrefix()), `unexpected viewer: ${page.url()}`);
+  assert.ok(!page.url().startsWith(viewerPage()), `unexpected viewer: ${page.url()}`);
   assert.equal((await downloads()).length, before + 1);
   await page.close();
 });
@@ -129,7 +152,7 @@ test('with "Also open mislabelled PDFs" on, an octet-stream .pdf opens in the vi
   await setSettings({ openOctetStreamPdfs: true }, 2);
   try {
     const { page } = await open('/octet.pdf');
-    await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+    await page.waitForURL((u) => u.href.startsWith(viewerPage()));
     await waitForViewerReady(page);
     await page.close();
   } finally {
@@ -139,8 +162,8 @@ test('with "Also open mislabelled PDFs" on, an octet-stream .pdf opens in the vi
 
 test('query strings and fragments survive the redirect', async () => {
   const { page } = await open('/query.pdf?a=1&b=two#page=2');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
-  const docUrl = await page.evaluate(() => location.href.slice(location.href.indexOf('?file=') + 6));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
+  const docUrl = (await viewerSource(page)).url;
   assert.equal(docUrl, `${env.fixtures.origin}/query.pdf?a=1&b=two#page=2`);
   await waitForViewerReady(page);
   assert.equal((await statusOf(page)).name, 'query.pdf');
@@ -159,7 +182,7 @@ test('a PDF sent as an attachment downloads instead of opening', async () => {
   const page = await env.context.newPage();
   await page.goto(`${env.fixtures.origin}/attachment.pdf`).catch(() => {});
   await page.waitForTimeout(2000);
-  assert.ok(!page.url().startsWith(viewerPrefix()), `unexpected viewer: ${page.url()}`);
+  assert.ok(!page.url().startsWith(viewerPage()), `unexpected viewer: ${page.url()}`);
   const after = await downloads();
   assert.equal(after.length, before + 1);
   assert.match(after.at(-1).url, /attachment\.pdf$/);
@@ -176,7 +199,7 @@ test('a 404 at a .pdf address shows the site’s own error page', async () => {
 
 test('a file that claims to be a PDF but isn’t gets a clear error', async () => {
   const { page } = await open('/malformed.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await page.waitForSelector('#status.is-error');
   const s = await statusOf(page);
   assert.equal(s.title, "This isn't a PDF");
@@ -214,7 +237,7 @@ test('an unreachable server is reported as a network error', async () => {
 
 test('a large PDF (about 24 MB, 200 pages) opens', async () => {
   const { page } = await open('/large.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(page, { timeout: 120_000 });
   assert.match((await statusOf(page)).meta, /24\.\d MB/);
   await page.close();
@@ -243,7 +266,7 @@ test('the viewer refuses to run inside another site’s frame', async () => {
 
 test('"Download" saves the original bytes through chrome.downloads', async () => {
   const { page } = await open('/doc.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(page);
   const before = (await downloads()).length;
   await page.click('#btn-download');
@@ -259,7 +282,7 @@ test('"Download" saves the original bytes through chrome.downloads', async () =>
 
 test('saving in PdfCraft (Ctrl+S) reaches the extension and downloads the PDF', async () => {
   const { page } = await open('/doc.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(page);
   const before = (await downloads()).length;
   const canvas = page.frameLocator('#pdfcraft').locator('canvas');
@@ -277,7 +300,7 @@ test('saving in PdfCraft (Ctrl+S) reaches the extension and downloads the PDF', 
 
 test('"Open in Chrome\'s PDF viewer" bypasses the redirect for that load', async () => {
   const { page } = await open('/doc.pdf');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(page);
   await page.click('#btn-more');
   await page.click('#menu-native');
@@ -286,13 +309,13 @@ test('"Open in Chrome\'s PDF viewer" bypasses the redirect for that load', async
   assert.equal(page.url(), `${env.fixtures.origin}/doc.pdf`);
   // The bypass was for one load: the next navigation is redirected again.
   await page.goto(`${env.fixtures.origin}/no-extension`).catch(() => {});
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await page.close();
 });
 
 test('"Copy document link" copies the original URL', async () => {
   const { page } = await open('/query.pdf?a=1&b=two#page=2');
-  await page.waitForURL((u) => u.href.startsWith(viewerPrefix()));
+  await page.waitForURL((u) => u.href.startsWith(viewerPage()));
   await waitForViewerReady(page);
   // Reading the clipboard back would wait on a permission prompt; record what is written instead.
   await page.evaluate(() => {
@@ -322,8 +345,8 @@ test('a bypassed load that becomes a download doesn’t leave the tab bypassed',
   for (let i = 0; i < 50 && (await env.worker.evaluate(() => chrome.declarativeNetRequest.getSessionRules())).length; i++) await page.waitForTimeout(100);
   assert.deepEqual(await env.worker.evaluate(() => chrome.declarativeNetRequest.getSessionRules()), []);
   await page.goto(`${env.fixtures.origin}/doc.pdf`).catch(() => {});
-  for (let i = 0; i < 100 && !page.url().startsWith(viewerPrefix()); i++) await page.waitForTimeout(100);
-  assert.ok(page.url().startsWith(viewerPrefix()), `not redirected: ${page.url()}`);
+  for (let i = 0; i < 100 && !page.url().startsWith(viewerPage()); i++) await page.waitForTimeout(100);
+  assert.ok(page.url().startsWith(viewerPage()), `not redirected: ${page.url()}`);
   await page.close();
 });
 
