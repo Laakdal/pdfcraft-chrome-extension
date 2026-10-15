@@ -30,7 +30,7 @@ after(async () => {
 
 test('main flows leave no extension errors or console errors', async () => {
   const { origin } = env.fixtures;
-  const viewer = `${env.base}viewer/viewer.html`;
+  const viewer = `${env.base}pdfcraft.html`;
   for (const path of ['/doc.pdf', '/redirect.pdf', '/no-extension', '/large.pdf']) {
     const page = await env.context.newPage();
     await page.goto(origin + path).catch(() => {});
