@@ -41,6 +41,7 @@ try {
   await page.goto(`${fixtures.origin}/doc.pdf`).catch((e) => (result.gotoNote = e.message.split('\n')[0]));
   for (let i = 0; i < 100 && !page.url().startsWith(base); i++) await new Promise((r) => setTimeout(r, 100));
   result.redirectedTo = page.url();
+  result.source = await page.waitForFunction(() => history.state?.pdfcraftSource?.url, { timeout: 10000 }).then((h) => h.jsonValue()).catch(() => null);
   await page.waitForFunction(() => document.documentElement.dataset.pdfcraftVersion !== undefined, { timeout: 90000 });
   await page.waitForSelector('#status', { hidden: true, timeout: 90000 });
   result.pdfcraftVersion = await page.evaluate(() => document.documentElement.dataset.pdfcraftVersion);
@@ -68,7 +69,7 @@ try {
   result.error = e.message.split('\n')[0];
 } finally {
   console.log(JSON.stringify(result, null, 2));
-  const ok = result.pdfcraftVersion && result.redirectedTo?.includes('/viewer/viewer.html?file=') && result.popup?.w === 293 && result.embeddedButton === true;
+  const ok = result.pdfcraftVersion && result.redirectedTo?.includes('/viewer/viewer.html') && result.source === `${fixtures.origin}/doc.pdf` && result.popup?.w === 293 && result.embeddedButton === true;
   console.log(ok ? 'PASS' : 'FAIL');
   process.exitCode = ok ? 0 : 1;
   await browser.close();
