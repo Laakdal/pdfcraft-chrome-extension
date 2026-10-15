@@ -22,7 +22,11 @@ verified) and adds the browser integration around it.
 ## Use
 
 - **Open a PDF link** or type a PDF's address: it opens in PdfCraft. The **⋮** menu has
-  *Open in Chrome's PDF viewer* when you want Chrome's viewer for that document.
+  *Open original in Chrome's PDF viewer* when you want Chrome's viewer for that document.
+- **Several PDFs in one tab**: PdfCraft's own tabs and **+ Open** hold more documents, so once
+  PdfCraft shows a PDF the address bar shows just the PdfCraft page and the top bar names no
+  document. *Download original* and the **⋮** menu act on the PDF the tab was opened with (the
+  menu names it). Reloading the tab reopens that PDF.
 - **Toolbar popup**:
   - **Select a file** opens a local PDF.
   - The middle card shows this tab's PDF, or the PDFs linked on the page.
@@ -30,7 +34,7 @@ verified) and adds the browser integration around it.
   - The switch at the bottom turns PDF opening on or off.
 - **Embedded PDFs**: hover the round PdfCraft button at the bottom right of the PDF.
 - **Right-click** a link → *Open link in PdfCraft*.
-- **Saving**: PdfCraft's Save and Save As go to your downloads, and *Download* in the top bar
+- **Saving**: PdfCraft's Save and Save As go to your downloads, and *Download original* in the top bar
   saves the original file. Exports, splits and prints come from PdfCraft itself.
 - **Settings**: the gear in the popup, or the extension's *Extension options*.
 
