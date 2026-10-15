@@ -2,7 +2,7 @@
 //
 // Third-party extensions can't register as Chrome's PDF MIME handler, so the extension redirects
 // instead: a rule matches a top-level response whose Content-Type is PDF (response-header
-// conditions, Chrome 128+) and redirects it to viewer/viewer.html?file=<original URL>. The viewer
+// conditions, Chrome 128+) and redirects it to pdfcraft.html?file=<original URL>. The viewer
 // then downloads the document itself. Responses sent as attachments are left to Chrome's download
 // manager, as the user (or site) asked.
 
@@ -18,7 +18,7 @@ const ATTACHMENT = [{ header: 'content-disposition', values: ['attachment*'] }];
 export function redirectRules(extensionBase, { octetStream = true } = {}) {
   const redirect = {
     type: 'redirect',
-    redirect: { regexSubstitution: `${extensionBase}viewer/viewer.html?file=\\0` },
+    redirect: { regexSubstitution: `${extensionBase}pdfcraft.html?file=\\0` },
   };
   const rules = [
     {
