@@ -17,7 +17,7 @@ after(async () => {
   await env?.close();
 });
 
-const viewerPage = () => `${env.base}viewer/viewer.html`;
+const viewerPage = () => `${env.base}pdfcraft.html`;
 const viewerPrefix = () => `${viewerPage()}?file=`;
 
 async function open(path) {
