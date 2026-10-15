@@ -25,8 +25,7 @@ const READY_TIMEOUT_MS = 60_000;
 const $ = (id) => document.getElementById(id);
 const frame = $('pdfcraft');
 const state = {
-  url: documentUrlFromViewer(location.href),
-  mode: modeFromViewer(location.href),
+  ...documentSource(),
   name: null,
   original: null, // Uint8Array of the downloaded document, for "Download"
   dirty: false,
@@ -48,6 +47,24 @@ if (window.top !== window) {
   showError(t('viewerFramedTitle'), t('viewerFramedDetail'), {});
 } else {
   start();
+}
+
+/**
+ * The document (and workspace) this tab opens. Redirects and the popup pass it in the address
+ * (`?mode=…&file=…`). It then moves into history.state: PdfCraft can hold several documents in its
+ * own tabs, so the address bar shows just the PdfCraft page, while a reload or Back/Forward still
+ * reopens the same document.
+ */
+function documentSource() {
+  if (window.top !== window) return { url: null, mode: null };
+  const url = documentUrlFromViewer(location.href);
+  const mode = modeFromViewer(location.href);
+  if (url || mode) {
+    history.replaceState({ ...history.state, pdfcraftSource: { url, mode } }, '', location.pathname);
+    return { url, mode };
+  }
+  const saved = history.state?.pdfcraftSource;
+  return { url: saved?.url ?? null, mode: saved?.mode ?? null };
 }
 
 async function start() {
@@ -91,10 +108,8 @@ async function start() {
     return;
   }
 
-  state.name = pdfFilename(download.name, fallbackName);
-  state.original = download.bytes;
+  setOriginal(pdfFilename(download.name, fallbackName), download.bytes);
   setTitle(state.name, `${hostLabel(state.url)} · ${formatBytes(download.bytes.length)}`);
-  $('btn-download').disabled = false;
   showStatus(t('viewerStarting'), '', { spinner: true });
   try {
     await pdfcraftReady;
@@ -234,10 +249,8 @@ async function openLocalFiles(files) {
       continue;
     }
     if (!state.original) {
-      state.name = pdfFilename(file.name);
-      state.original = bytes.slice();
+      setOriginal(pdfFilename(file.name), bytes.slice());
       setTitle(state.name, `${t('viewerLocalFile')} · ${formatBytes(bytes.length)}`);
-      $('btn-download').disabled = false;
     }
     sendToPdfCraft(pdfFilename(file.name), bytes);
     opened++;
@@ -336,10 +349,27 @@ function wireChrome() {
   $('btn-retry').addEventListener('click', () => location.reload());
 }
 
+/** The document this tab was opened with: "Download original" and the ⋮ menu act on it. */
+function setOriginal(name, bytes) {
+  state.name = name;
+  state.original = bytes;
+  $('btn-download').disabled = false;
+  $('btn-download').title = t('viewerDownloadTipNamed', [name]);
+  $('menu-label').textContent = t('viewerOriginalLabel', [name]);
+  $('menu-label').hidden = false;
+}
+
+/** Names the document in the top bar while it loads or fails; see hideStatus. */
 function setTitle(name, meta) {
   $('doc-name').textContent = name;
   $('doc-meta').textContent = meta;
   document.title = state.url || state.original ? `${name} – PdfCraft` : 'PdfCraft';
+}
+
+/** The top bar names a document only while the status card shows; PdfCraft's tabs name the rest. */
+function showDocTitle(shown) {
+  $('doc-title').hidden = !shown;
+  $('doc-divider').hidden = !shown;
 }
 
 function hostLabel(url) {
@@ -354,6 +384,7 @@ function hostLabel(url) {
 /** Puts the overlay back to its plain state: no landing extras, no buttons. */
 function resetStatus() {
   $('status').hidden = false;
+  showDocTitle(true);
   $('status').classList.remove('is-error');
   $('status-card').classList.remove('is-landing');
   $('landing-icon').hidden = true;
@@ -379,8 +410,14 @@ function setProgress(fraction) {
   if (fraction != null) bar.style.width = `${Math.round(fraction * 100)}%`;
 }
 
+/**
+ * PdfCraft takes over: it may show other documents in its own tabs (its "+ Open", drops) and
+ * doesn't tell the host which one is active, so the bar and the browser tab stop naming one.
+ */
 function hideStatus() {
   $('status').hidden = true;
+  showDocTitle(false);
+  document.title = 'PdfCraft';
 }
 
 function showError(title, detail, { retry = false, native = false, pick = false }) {
