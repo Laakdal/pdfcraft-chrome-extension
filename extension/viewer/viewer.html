@@ -14,8 +14,8 @@
       <div class="topbar-start">
         <img class="brand-mark" src="../icons/pdfcraft-64.png" alt="" width="24" height="24" />
         <span class="brand-name">PdfCraft</span>
-        <span class="divider" aria-hidden="true"></span>
-        <div class="doc-title">
+        <span id="doc-divider" class="divider" aria-hidden="true"></span>
+        <div id="doc-title" class="doc-title">
           <span id="doc-name" class="doc-name" data-i18n="viewerNoDocument"></span>
           <span id="doc-meta" class="doc-meta"></span>
         </div>
@@ -35,13 +35,14 @@
             <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#more" /></svg>
           </button>
           <div id="menu-more" class="menu" role="menu" hidden>
+            <div id="menu-label" class="menu-label" hidden></div>
             <button id="menu-native" class="menu-item" role="menuitem" type="button" hidden>
               <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#external" /></svg>
-              <span data-i18n="viewerOpenNative"></span>
+              <span data-i18n="viewerOpenNativeOriginal"></span>
             </button>
             <button id="menu-source" class="menu-item" role="menuitem" type="button" hidden>
               <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#link" /></svg>
-              <span data-i18n="viewerCopyLink"></span>
+              <span data-i18n="viewerCopyLinkOriginal"></span>
             </button>
             <button id="menu-settings" class="menu-item" role="menuitem" type="button">
               <svg class="icon" aria-hidden="true"><use href="../icons/ui.svg#settings" /></svg>
