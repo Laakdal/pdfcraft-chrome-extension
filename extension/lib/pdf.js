@@ -1,7 +1,7 @@
 // Pure helpers shared by the service worker, the viewer and the popup. No chrome.* calls here,
 // so tests/unit can import this module under Node.
 
-export const VIEWER_PATH = 'viewer/viewer.html';
+export const VIEWER_PATH = 'pdfcraft.html';
 const FILE_PARAM = 'file=';
 
 /** PdfCraft's workspaces ("modes"), as its settings name them. */
@@ -9,7 +9,7 @@ export const MODES = ['all', 'read', 'edit', 'convert', 'sign'];
 
 /**
  * The viewer URL for a document URL (or none), optionally opening in a PdfCraft workspace, e.g.
- * chrome-extension://<id>/viewer/viewer.html?mode=edit&file=https%3A…
+ * chrome-extension://<id>/pdfcraft.html?mode=edit&file=https%3A…
  * `file` is always the last parameter: see documentUrlFromViewer.
  */
 export function viewerUrl(extensionBase, documentUrl, { mode } = {}) {
