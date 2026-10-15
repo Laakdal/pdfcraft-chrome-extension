@@ -12,7 +12,7 @@ const shot = (page, name) => page.screenshot({ path: join(out, `pdfcraft-${name}
 const env = await launch({ cdpPort: 9300 + Math.floor(Math.random() * 90) });
 try {
   const { origin } = env.fixtures;
-  const viewer = `${env.base}viewer/viewer.html`;
+  const viewer = `${env.base}pdfcraft.html`;
 
   // Viewer with a web PDF (redirected from the address bar).
   const page = await env.context.newPage();
