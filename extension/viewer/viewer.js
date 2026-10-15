@@ -70,7 +70,7 @@ function documentSource() {
 async function start() {
   wireChrome();
   prepareWorkspace(state.mode);
-  frame.src = '../pdfcraft/index.html?host=parent';
+  frame.src = 'pdfcraft/index.html?host=parent';
   const timer = setTimeout(() => rejectReady(new Error(t('viewerStartTimeout'))), READY_TIMEOUT_MS);
   pdfcraftReady.finally(() => clearTimeout(timer)).catch(() => {});
 
