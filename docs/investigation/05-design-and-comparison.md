@@ -38,11 +38,11 @@ This document connects the Adobe investigation and the PdfCraft assessment
 
 | Adobe behaviour | Evidence | PdfCraft capability | Implementation in this extension | Local? | Known limitations |
 |---|---|---|---|---|---|
-| A1 Open PDF navigations in the extension viewer | A1 | Rendering and every tool in the bundled PdfCraft web build | `declarativeNetRequest` dynamic rule: `main_frame`, GET, `Content-Type: application/pdf` (response-header condition, Chrome 128+), not `attachment` → redirect to `viewer/viewer.html?file=<url>` (`lib/rules.js`) | ✅ | Third-party extensions can't use `mime_types_handler`, so this is a redirect: the PDF is requested twice (once by the tab, once by the viewer). POST-generated PDFs are left to Chrome |
+| A1 Open PDF navigations in the extension viewer | A1 | Rendering and every tool in the bundled PdfCraft web build | `declarativeNetRequest` dynamic rule: `main_frame`, GET, `Content-Type: application/pdf` (response-header condition, Chrome 128+), not `attachment` → redirect to `pdfcraft.html?file=<url>` (`lib/rules.js`) | ✅ | Third-party extensions can't use `mime_types_handler`, so this is a redirect: the PDF is requested twice (once by the tab, once by the viewer). POST-generated PDFs are left to Chrome |
 | A2 Fallback "let it through once" | A2 | — | "Open in Chrome's PDF viewer" (viewer ⋮ menu and error screens): a per-tab session `allow` rule for the next load, removed after commit (`service-worker.js`) | ✅ | |
 | A3 MIME variants | A3 | — | Same as Adobe: text/plain, attachment and 404 are left alone. octet-stream with a `.pdf` path is **off by default** (as Adobe), switchable in Settings | ✅ | Adobe also catches octet-stream with a `.pdf` Content-Disposition filename; DNR can't combine two header conditions, so PdfCraft uses the URL path |
 | A4 Malformed PDF | A4 | — | The viewer checks the `%PDF-` signature itself and shows "This isn't a PDF" with Open in Chrome / Select a file (`viewer.js`) | ✅ | Deliberate difference: a clear message instead of a silent fallback |
-| A5 Viewer | A5, A9 | PdfCraft's egui workbench, which already has All tools / Read / Edit / Convert / E-Sign, a tools panel, a quick-tools bar and a page rail | `viewer/viewer.html`: a 48 px PdfCraft top bar (name, source, Open file, Download original, ⋮) above PdfCraft in a same-origin iframe, driven through PdfCraft's own `?host=parent` postMessage bridge (`pdfcraft:ready/open/save/dirty/failed`) | ✅ entirely | Two bars: the extension's and PdfCraft's own. Share, AI, plans and sign-in have no PdfCraft equivalent and are not shown |
+| A5 Viewer | A5, A9 | PdfCraft's egui workbench, which already has All tools / Read / Edit / Convert / E-Sign, a tools panel, a quick-tools bar and a page rail | `pdfcraft.html`: a 48 px PdfCraft top bar (name, source, Open file, Download original, ⋮) above PdfCraft in a same-origin iframe, driven through PdfCraft's own `?host=parent` postMessage bridge (`pdfcraft:ready/open/save/dirty/failed`) | ✅ entirely | Two bars: the extension's and PdfCraft's own. Share, AI, plans and sign-in have no PdfCraft equivalent and are not shown |
 | A6 Offline | A6 | PdfCraft needs no network | Everything is bundled: PdfCraft starts offline; a web PDF that can't be fetched gets "You're offline" with Try again / Select a file | ✅ | Deliberate difference: works offline |
 | A7 Embedded-PDF button | A7 | — | `content/embedded-pdf.js`: `all_frames` content script that, in frames whose `document.contentType` is PDF, adds a round PdfCraft button at the bottom right (closed shadow root); hover shows "Open in PdfCraft" and a hide button; opens the PDF in a PdfCraft tab | ✅ | No first-run coachmark or drag handle; off switch in Settings |
 | A8 Toolbar popup | A8 | — | `popup/popup.html` (293 px wide): header (icon, name, settings gear); "View or edit files" with a "Select a file" pill; a context card (this tab's PDF → Open in PdfCraft; PDFs linked or embedded on the page → list; PdfCraft tab → which document the rows use); Convert / Edit / E-Sign rows; footer toggle "Open PDFs in PdfCraft" | ✅ | The popup is the default click (Adobe defaults to its side panel). Adobe's remote AI/PDF-Space card is replaced by the local context card |
@@ -75,7 +75,7 @@ flowchart LR
     CS["Content script<br/>content/embedded-pdf.js"]
     POP["Popup<br/>popup/"]
     OPT["Settings<br/>options/"]
-    subgraph VIEW["Viewer page: viewer/viewer.html"]
+    subgraph VIEW["Viewer page: pdfcraft.html"]
       SHELL["Top bar, fetch (+cookies, CORS-exempt),<br/>%PDF check, errors, downloads"]
     end
   end
@@ -108,7 +108,7 @@ The same in plain text:
  ─────────────────                    ──────────────────────────                    ───────────────────────────────
  PDF navigation ──► DNR redirect rule ──┐
  file:// PDF ─────► service worker ─────┤
- context menu ────► service worker ─────┼──► viewer/viewer.html ──(same-origin iframe)──► pdfcraft/index.html + boot.js
+ context menu ────► service worker ─────┼──► pdfcraft.html ──(same-origin iframe)──► pdfcraft/index.html + boot.js
  toolbar ─────────► popup ──► sw ───────┤      fetch + checks + top bar                    └► pdfcraft-web-*.js / *_bg.wasm
  embedded PDF ────► content script ─────┘      postMessage: ready/open/save/dirty            (rendering, editing, signing,
                                                workspace preselection (localStorage)          export, organize, …)
@@ -128,7 +128,7 @@ The same in plain text:
 |---|---|
 | `mime_types_handler` and `chrome.mimeHandler` are restricted to allowlisted extension IDs (Adobe, Chrome's own viewer) | PdfCraft redirects instead: a DNR rule on the response's Content-Type. The tab's own request completes headers first, so the viewer downloads the PDF a second time |
 | Manifest V3 CSP: no inline scripts, no remote code; WebAssembly needs `'wasm-unsafe-eval'` | `script-src 'self' 'wasm-unsafe-eval'`; PdfCraft's inline loader moved to `pdfcraft/boot.js`; everything is bundled |
-| DNR redirects to extension pages need the page in `web_accessible_resources` | `viewer/viewer.html` is web-accessible, so other sites could frame it: the viewer refuses to run when framed (`window.top !== window`), and the CSP adds `frame-ancestors 'self'` |
+| DNR redirects to extension pages need the page in `web_accessible_resources` | `pdfcraft.html` is web-accessible, so other sites could frame it: the viewer refuses to run when framed (`window.top !== window`), and the CSP adds `frame-ancestors 'self'` |
 | Extension pages can't read `file://` with `fetch()`, and only with the user's "Allow access to file URLs" | XHR for file URLs; Settings explains the switch; "Select a file" and drag-and-drop need no permission |
 | Popups close when they lose focus (a file chooser takes focus) | "Select a file" opens the viewer's chooser page in a tab |
 | An extension can't draw over Chrome's built-in PDF viewer from outside its frame | The embedded button is drawn by a content script inside the PDF frame (Adobe's technique) |
