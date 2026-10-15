@@ -1,0 +1,173 @@
+/* Design tokens shared by the popup, viewer and settings pages. Colours, radii and type follow
+   PdfCraft's egui theme (crates/ui-egui/src/theme.rs: light and dark palettes, Inter 13 px, radius
+   6, menus 8) so the extension's chrome matches the app it hosts. Values PdfCraft doesn't define
+   (dark hover/pressed, danger, success) are picked to sit with its palette. --brand is the app
+   icon's green, used only next to the icon. */
+
+:root {
+  color-scheme: light dark;
+  --font-ui: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --bg: #f1f1f3;
+  --surface: #ffffff;
+  --surface-2: #e9e9eb;
+  --surface-hover: #f0f0f3;
+  --surface-active: #e4e4e9;
+  --selected: #e6eefd;
+  --border: #dadade;
+  --divider: #e8e8eb;
+  --text: #222226;
+  --text-2: #5e5e66;
+  --text-3: #6b6b73;
+  --accent: #1b63e0;
+  --accent-hover: #1755c4;
+  --accent-text: #ffffff;
+  --accent-soft: #e3ecfd;
+  --focus: #1b63e0;
+  --danger: #c4312a;
+  --success: #24834a;
+  --brand: #12a58a;
+  --shadow: 0 4px 16px rgb(0 0 0 / 12%), 0 1px 3px rgb(0 0 0 / 8%);
+
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+}
+
+/* Dark: when PdfCraft's theme is Dark, or System on a dark OS (no data-theme attribute). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #19191c;
+    --surface: #26262a;
+    --surface-2: #1b1b1e;
+    --surface-hover: #2f2f34;
+    --surface-active: #38383e;
+    --selected: #24324a;
+    --border: #3c3c43;
+    --divider: #333339;
+    --text: #ececef;
+    --text-2: #aeaeb6;
+    --text-3: #97979e;
+    --accent: #4b8bf5;
+    --accent-hover: #6a9ff7;
+    --accent-text: #0b1526;
+    --accent-soft: #1f2d45;
+    --focus: #4b8bf5;
+    --danger: #f0665c;
+    --shadow: 0 4px 16px rgb(0 0 0 / 40%), 0 1px 3px rgb(0 0 0 / 30%);
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #19191c;
+  --surface: #26262a;
+  --surface-2: #1b1b1e;
+  --surface-hover: #2f2f34;
+  --surface-active: #38383e;
+  --selected: #24324a;
+  --border: #3c3c43;
+  --divider: #333339;
+  --text: #ececef;
+  --text-2: #aeaeb6;
+  --text-3: #97979e;
+  --accent: #4b8bf5;
+  --accent-hover: #6a9ff7;
+  --accent-text: #0b1526;
+  --accent-soft: #1f2d45;
+  --focus: #4b8bf5;
+  --danger: #f0665c;
+  --shadow: 0 4px 16px rgb(0 0 0 / 40%), 0 1px 3px rgb(0 0 0 / 30%);
+}
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+/* `hidden` always wins over component display rules (.btn, .menu, …). */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-m);
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn:focus-visible, .menu-item:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.btn-primary { background: var(--accent); color: var(--accent-text); }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-secondary { border-color: var(--border); background: var(--surface); }
+.btn-secondary:hover:not(:disabled) { background: var(--surface-hover); }
+.btn-quiet:hover:not(:disabled), .btn-icon:hover:not(:disabled) { background: var(--surface-hover); }
+.btn-quiet:active:not(:disabled), .btn-icon:active:not(:disabled) { background: var(--surface-active); }
+.btn-icon { width: 32px; padding: 0; }
+
+.menu {
+  position: absolute;
+  z-index: 20;
+  min-width: 240px;
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 34px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-m);
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-item:hover { background: var(--surface-hover); }
+.menu-item .icon { color: var(--text-2); }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-5);
+  transform: translateX(-50%);
+  z-index: 30;
+  max-width: min(90vw, 480px);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-m);
+  color: #fff;
+  background: #2b2b30;
+  box-shadow: var(--shadow);
+}
