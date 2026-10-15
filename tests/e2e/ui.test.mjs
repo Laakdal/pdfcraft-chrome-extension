@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { after, before, test } from 'node:test';
 import { makePdf } from '../fixtures/make-pdf.mjs';
-import { launch, openPopup, waitForViewerReady } from './harness.mjs';
+import { launch, openPopup, viewerSource, waitForViewerReady } from './harness.mjs';
 
 let env;
 before(async () => {
@@ -56,7 +56,7 @@ test('popup: layout and the PDFs linked from a page', async () => {
     }),
   ]);
   await newTab.waitForURL((u) => u.href.startsWith(viewer()));
-  assert.equal(new URL(newTab.url()).searchParams.get('file'), `${env.fixtures.origin}/doc.pdf`);
+  assert.equal((await viewerSource(newTab)).url, `${env.fixtures.origin}/doc.pdf`);
   await waitForViewerReady(newTab);
   await newTab.close();
   await page.close();
@@ -84,7 +84,8 @@ test('popup: a workspace row without a PDF asks for a file, in that workspace', 
   const page = await env.context.newPage();
   await page.goto(`${env.fixtures.origin}/embed.html`);
   const [landing] = await Promise.all([env.context.waitForEvent('page'), withPopup(page, (popup) => popup.click('.row[data-mode="edit"]'))]);
-  await landing.waitForURL(`${viewer()}?mode=edit`);
+  await landing.waitForURL((u) => u.href.startsWith(viewer()));
+  assert.deepEqual(await viewerSource(landing), { url: null, mode: 'edit' });
   await landing.waitForSelector('#btn-pick:visible');
   assert.equal(await landing.textContent('#status-title'), 'Choose a PDF to edit');
   // Only the landing's own controls: no error icon, no retry or Chrome-viewer buttons.
@@ -115,7 +116,8 @@ test('popup: a workspace row on a PDF tab opens that PDF in the workspace; the u
     assert.match(await popup.textContent('.ctx-detail'), /^doc.pdf · /);
   });
   const [signTab] = await Promise.all([env.context.waitForEvent('page'), withPopup(page, (popup) => popup.click('.row[data-mode="sign"]'))]);
-  await signTab.waitForURL((u) => u.href.startsWith(`${viewer()}?mode=sign&file=`));
+  await signTab.waitForURL((u) => u.href.startsWith(viewer()));
+  assert.deepEqual(await viewerSource(signTab), { url: `${env.fixtures.origin}/doc.pdf`, mode: 'sign' });
   await waitForViewerReady(signTab);
   assert.equal((await pdfcraftSettings(signTab)).default_mode, 'sign');
   if (process.env.PDFCRAFT_SCREENSHOTS) await signTab.screenshot({ path: join(process.env.PDFCRAFT_SCREENSHOTS, 'pdfcraft-workspace-sign.png') });
@@ -169,7 +171,7 @@ test('embedded PDFs get an "Open in PdfCraft" button', async () => {
     }
     const [tab] = await Promise.all([env.context.waitForEvent('page'), page.mouse.click(box.x + box.width - 20, box.y + box.height / 2)]);
     await tab.waitForURL((u) => u.href.startsWith(viewer()));
-    assert.equal(new URL(tab.url()).searchParams.get('file'), `${env.fixtures.origin}/doc.pdf`);
+    assert.equal((await viewerSource(tab)).url, `${env.fixtures.origin}/doc.pdf`);
     await waitForViewerReady(tab);
     await tab.close();
     await page.close();
@@ -189,18 +191,21 @@ test('the embedded-PDF button can be turned off', async () => {
 
 test('offline: PdfCraft still starts; web documents explain why they can’t load', async () => {
   const page = await env.context.newPage();
+  const landing = await env.context.newPage();
   await env.context.setOffline(true);
   try {
     await page.goto(`${viewer()}?file=${encodeURIComponent(`${env.fixtures.origin}/doc.pdf`)}`);
     await page.waitForSelector('#status.is-error');
     assert.equal(await page.textContent('#status-title'), "You're offline");
     assert.ok(await page.isVisible('#status-icon'));
-    await page.goto(viewer());
-    await page.click('#btn-continue');
-    await waitForViewerReady(page);
+    // A fresh tab: the same address in this tab would count as a reload of the document.
+    await landing.goto(viewer());
+    await landing.click('#btn-continue');
+    await waitForViewerReady(landing);
   } finally {
     await env.context.setOffline(false);
     await page.close();
+    await landing.close();
   }
 });
 
