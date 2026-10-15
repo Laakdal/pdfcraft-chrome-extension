@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "short_name": "PdfCraft",
+  "description": "__MSG_extDescription__",
+  "version": "0.1.0",
+  "version_name": "0.1.0 (PdfCraft 0.8.0)",
+  "default_locale": "en",
+  "minimum_chrome_version": "128",
+  "icons": {
+    "16": "icons/pdfcraft-16.png",
+    "32": "icons/pdfcraft-32.png",
+    "48": "icons/pdfcraft-48.png",
+    "128": "icons/pdfcraft-128.png"
+  },
+  "action": {
+    "default_title": "__MSG_actionTitle__",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/pdfcraft-16.png",
+      "24": "icons/pdfcraft-24.png",
+      "32": "icons/pdfcraft-32.png"
+    }
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "declarativeNetRequestWithHostAccess",
+    "webNavigation",
+    "contextMenus",
+    "downloads",
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content/embedded-pdf.js"],
+      "all_frames": true,
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["viewer/viewer.html", "icons/pdfcraft-64.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; frame-ancestors 'self'"
+  },
+  "incognito": "split"
+}
